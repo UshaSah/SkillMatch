@@ -1,0 +1,27 @@
+{
+  "name": "skillexchange",
+  "version": "1.0.0",
+  "description": "a web platform that matches people who learn or teach skills",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UshaSah/SkillExchange.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/UshaSah/SkillExchange/issues"
+  },
+  "homepage": "https://github.com/UshaSah/SkillExchange#readme",
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}
