@@ -1,0 +1,467 @@
+[
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439031"},
+    "ownerId": {"$oid": "507f1f77bcf86cd799439011"},
+    "type": "offer",
+    "title": "JavaScript Tutoring - React & Node.js",
+    "description": "Offering one-on-one JavaScript tutoring sessions. Can help with React hooks, Node.js backend development, and async programming. Perfect for beginners looking to level up their skills. Available evenings and weekends.",
+    "skills": [
+      {
+        "name": "JavaScript",
+        "level": "expert",
+        "category": "Programming"
+      },
+      {
+        "name": "React",
+        "level": "advanced",
+        "category": "Frontend"
+      },
+      {
+        "name": "Node.js",
+        "level": "advanced",
+        "category": "Backend"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-122.4194, 37.7749],
+      "address": {
+        "city": "San Francisco",
+        "state": "CA",
+        "zipCode": "94102",
+        "country": "USA"
+      }
+    },
+    "timeCommitment": "one-time",
+    "estimatedHours": {
+      "min": 1,
+      "max": 2
+    },
+    "status": "active",
+    "tags": ["javascript", "react", "node.js", "programming", "frontend", "backend"],
+    "requirements": [
+      "Basic understanding of HTML/CSS",
+      "Laptop with code editor installed"
+    ],
+    "benefits": [
+      "Hands-on coding practice",
+      "Personalized learning plan",
+      "Code review and feedback"
+    ],
+    "contactMethod": "message",
+    "isRemote": false,
+    "viewCount": 25,
+    "interestCount": 3,
+    "isActive": true,
+    "expiresAt": {"$date": "2026-02-22T10:00:00.000Z"},
+    "createdAt": {"$date": "2026-01-22T10:00:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:00:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439032"},
+    "ownerId": {"$oid": "507f1f77bcf86cd799439012"},
+    "type": "request",
+    "title": "Need Help with UI/UX Design Portfolio",
+    "description": "Looking for feedback on my design portfolio. Would love to connect with experienced designers for mentorship and portfolio review. Working on transitioning into UX design and need guidance on best practices.",
+    "skills": [
+      {
+        "name": "Figma",
+        "level": "intermediate",
+        "category": "Design"
+      },
+      {
+        "name": "Portfolio Review",
+        "level": "beginner",
+        "category": "Design"
+      },
+      {
+        "name": "User Research",
+        "level": "beginner",
+        "category": "Design"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-74.0060, 40.7128],
+      "address": {
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001",
+        "country": "USA"
+      }
+    },
+    "timeCommitment": "short-term",
+    "estimatedHours": {
+      "min": 2,
+      "max": 5
+    },
+    "status": "active",
+    "tags": ["figma", "design", "portfolio review", "ux", "user research"],
+    "requirements": [
+      "Experience in UI/UX design",
+      "Willing to review portfolio pieces"
+    ],
+    "benefits": [
+      "Portfolio improvement",
+      "Design mentorship",
+      "Industry insights"
+    ],
+    "contactMethod": "message",
+    "isRemote": true,
+    "viewCount": 18,
+    "interestCount": 2,
+    "isActive": true,
+    "expiresAt": {"$date": "2026-02-22T10:05:00.000Z"},
+    "createdAt": {"$date": "2026-01-22T10:05:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:05:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439033"},
+    "ownerId": {"$oid": "507f1f77bcf86cd799439013"},
+    "type": "offer",
+    "title": "AWS Cloud Architecture Consultation",
+    "description": "Experienced DevOps engineer offering consultation on AWS architecture, cost optimization, and best practices. Can help set up CI/CD pipelines, configure auto-scaling, and design secure cloud infrastructure.",
+    "skills": [
+      {
+        "name": "AWS",
+        "level": "expert",
+        "category": "DevOps"
+      },
+      {
+        "name": "CI/CD",
+        "level": "advanced",
+        "category": "DevOps"
+      },
+      {
+        "name": "Docker",
+        "level": "advanced",
+        "category": "DevOps"
+      },
+      {
+        "name": "Infrastructure",
+        "level": "expert",
+        "category": "DevOps"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-87.6298, 41.8781],
+      "address": {
+        "city": "Chicago",
+        "state": "IL",
+        "zipCode": "60601",
+        "country": "USA"
+      }
+    },
+    "timeCommitment": "ongoing",
+    "estimatedHours": {
+      "min": 3,
+      "max": 8
+    },
+    "status": "active",
+    "tags": ["aws", "devops", "ci/cd", "docker", "infrastructure", "cloud"],
+    "requirements": [
+      "AWS account",
+      "Basic understanding of cloud concepts"
+    ],
+    "benefits": [
+      "Cost optimization strategies",
+      "Best practices implementation",
+      "Infrastructure design guidance"
+    ],
+    "contactMethod": "message",
+    "isRemote": true,
+    "viewCount": 42,
+    "interestCount": 5,
+    "isActive": true,
+    "expiresAt": {"$date": "2026-02-22T10:10:00.000Z"},
+    "createdAt": {"$date": "2026-01-22T10:10:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:10:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439034"},
+    "ownerId": {"$oid": "507f1f77bcf86cd799439014"},
+    "type": "offer",
+    "title": "Python Data Science Workshop",
+    "description": "Hosting a free workshop on data science with Python. Covering pandas, numpy, and basic machine learning concepts. Perfect for beginners! We'll work through real datasets and build a simple prediction model.",
+    "skills": [
+      {
+        "name": "Python",
+        "level": "expert",
+        "category": "Programming"
+      },
+      {
+        "name": "Data Science",
+        "level": "advanced",
+        "category": "ML"
+      },
+      {
+        "name": "Pandas",
+        "level": "advanced",
+        "category": "Data Science"
+      },
+      {
+        "name": "Machine Learning",
+        "level": "intermediate",
+        "category": "ML"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-122.3321, 47.6062],
+      "address": {
+        "city": "Seattle",
+        "state": "WA",
+        "zipCode": "98101",
+        "country": "USA"
+      }
+    },
+    "timeCommitment": "one-time",
+    "estimatedHours": {
+      "min": 2,
+      "max": 3
+    },
+    "status": "active",
+    "tags": ["python", "data science", "pandas", "machine learning", "ml", "programming"],
+    "requirements": [
+      "Python installed on laptop",
+      "Jupyter Notebook or VS Code",
+      "Basic Python knowledge helpful but not required"
+    ],
+    "benefits": [
+      "Hands-on data analysis",
+      "Learn pandas basics",
+      "Build your first ML model"
+    ],
+    "contactMethod": "message",
+    "isRemote": false,
+    "viewCount": 35,
+    "interestCount": 8,
+    "isActive": true,
+    "expiresAt": {"$date": "2026-02-22T10:15:00.000Z"},
+    "createdAt": {"$date": "2026-01-22T10:15:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:15:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439035"},
+    "ownerId": {"$oid": "507f1f77bcf86cd799439015"},
+    "type": "request",
+    "title": "Looking for React Native Code Review",
+    "description": "Working on my first React Native app and would love to get feedback from experienced mobile developers. Willing to trade - can help with web development in return! Need help with navigation, state management, and performance optimization.",
+    "skills": [
+      {
+        "name": "React Native",
+        "level": "beginner",
+        "category": "Mobile"
+      },
+      {
+        "name": "Code Review",
+        "level": "beginner",
+        "category": "Mobile"
+      },
+      {
+        "name": "Mobile Development",
+        "level": "beginner",
+        "category": "Mobile"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-118.2437, 34.0522],
+      "address": {
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90001",
+        "country": "USA"
+      }
+    },
+    "timeCommitment": "short-term",
+    "estimatedHours": {
+      "min": 1,
+      "max": 3
+    },
+    "status": "active",
+    "tags": ["react native", "mobile", "code review", "mobile development"],
+    "requirements": [
+      "Experience with React Native",
+      "Willing to review code and provide feedback"
+    ],
+    "benefits": [
+      "Code quality improvement",
+      "Learn best practices",
+      "Skill exchange opportunity"
+    ],
+    "contactMethod": "message",
+    "isRemote": true,
+    "viewCount": 12,
+    "interestCount": 1,
+    "isActive": true,
+    "expiresAt": {"$date": "2026-02-22T10:20:00.000Z"},
+    "createdAt": {"$date": "2026-01-22T10:20:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:20:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439036"},
+    "ownerId": {"$oid": "507f1f77bcf86cd799439011"},
+    "type": "request",
+    "title": "Need Help with MongoDB Queries",
+    "description": "Learning MongoDB and struggling with complex queries, aggregations, and indexing. Looking for someone to help me understand the concepts and review my queries. Have experience with SQL but new to NoSQL.",
+    "skills": [
+      {
+        "name": "MongoDB",
+        "level": "beginner",
+        "category": "Database"
+      },
+      {
+        "name": "Database Design",
+        "level": "beginner",
+        "category": "Database"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-122.4194, 37.7749],
+      "address": {
+        "city": "San Francisco",
+        "state": "CA",
+        "zipCode": "94102",
+        "country": "USA"
+      }
+    },
+    "timeCommitment": "one-time",
+    "estimatedHours": {
+      "min": 1,
+      "max": 2
+    },
+    "status": "active",
+    "tags": ["mongodb", "database", "database design", "nosql"],
+    "requirements": [
+      "MongoDB experience",
+      "Patience with beginners"
+    ],
+    "benefits": [
+      "Better understanding of MongoDB",
+      "Query optimization tips",
+      "Database design guidance"
+    ],
+    "contactMethod": "message",
+    "isRemote": true,
+    "viewCount": 8,
+    "interestCount": 0,
+    "isActive": true,
+    "expiresAt": {"$date": "2026-02-22T10:25:00.000Z"},
+    "createdAt": {"$date": "2026-01-22T10:25:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:25:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439037"},
+    "ownerId": {"$oid": "507f1f77bcf86cd799439012"},
+    "type": "offer",
+    "title": "Figma Design System Workshop",
+    "description": "Learn how to create and maintain a design system in Figma. Covering components, variants, auto-layout, and design tokens. Great for designers looking to level up their Figma skills.",
+    "skills": [
+      {
+        "name": "Figma",
+        "level": "expert",
+        "category": "Design"
+      },
+      {
+        "name": "Design Systems",
+        "level": "advanced",
+        "category": "Design"
+      },
+      {
+        "name": "UI Design",
+        "level": "advanced",
+        "category": "Design"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-74.0060, 40.7128],
+      "address": {
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001",
+        "country": "USA"
+      }
+    },
+    "timeCommitment": "one-time",
+    "estimatedHours": {
+      "min": 2,
+      "max": 4
+    },
+    "status": "active",
+    "tags": ["figma", "design systems", "ui design", "design"],
+    "requirements": [
+      "Figma account",
+      "Basic Figma knowledge"
+    ],
+    "benefits": [
+      "Design system creation",
+      "Component library setup",
+      "Figma advanced features"
+    ],
+    "contactMethod": "message",
+    "isRemote": true,
+    "viewCount": 28,
+    "interestCount": 4,
+    "isActive": true,
+    "expiresAt": {"$date": "2026-02-22T10:30:00.000Z"},
+    "createdAt": {"$date": "2026-01-22T10:30:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:30:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439038"},
+    "ownerId": {"$oid": "507f1f77bcf86cd799439013"},
+    "type": "request",
+    "title": "Help Setting Up Docker for Development",
+    "description": "New to Docker and need help setting up a development environment. Want to containerize my Node.js app and understand Docker Compose. Looking for someone to walk me through the process.",
+    "skills": [
+      {
+        "name": "Docker",
+        "level": "beginner",
+        "category": "DevOps"
+      },
+      {
+        "name": "Docker Compose",
+        "level": "beginner",
+        "category": "DevOps"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-87.6298, 41.8781],
+      "address": {
+        "city": "Chicago",
+        "state": "IL",
+        "zipCode": "60601",
+        "country": "USA"
+      }
+    },
+    "timeCommitment": "one-time",
+    "estimatedHours": {
+      "min": 2,
+      "max": 4
+    },
+    "status": "active",
+    "tags": ["docker", "docker compose", "devops"],
+    "requirements": [
+      "Docker installed",
+      "Node.js project ready"
+    ],
+    "benefits": [
+      "Containerized development setup",
+      "Docker best practices",
+      "Docker Compose configuration"
+    ],
+    "contactMethod": "message",
+    "isRemote": true,
+    "viewCount": 15,
+    "interestCount": 2,
+    "isActive": true,
+    "expiresAt": {"$date": "2026-02-22T10:35:00.000Z"},
+    "createdAt": {"$date": "2026-01-22T10:35:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:35:00.000Z"}
+  }
+]
