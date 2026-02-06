@@ -1,0 +1,364 @@
+[
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439021"},
+    "userId": {"$oid": "507f1f77bcf86cd799439011"},
+    "displayName": "John Doe",
+    "bio": "Full-stack developer with 5 years of experience. Love helping others learn JavaScript, React, and Node.js!",
+    "skills": [
+      {
+        "name": "JavaScript",
+        "level": "expert",
+        "category": "Programming"
+      },
+      {
+        "name": "React",
+        "level": "advanced",
+        "category": "Frontend"
+      },
+      {
+        "name": "Node.js",
+        "level": "advanced",
+        "category": "Backend"
+      },
+      {
+        "name": "MongoDB",
+        "level": "intermediate",
+        "category": "Database"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-122.4194, 37.7749],
+      "address": {
+        "city": "San Francisco",
+        "state": "CA",
+        "zipCode": "94102",
+        "country": "USA"
+      }
+    },
+    "radius": 25,
+    "avatarUrl": null,
+    "reputation": 150,
+    "rating": {
+      "average": 4.5,
+      "count": 10
+    },
+    "availability": {
+      "monday": [{"start": "18:00", "end": "21:00"}],
+      "wednesday": [{"start": "18:00", "end": "21:00"}],
+      "saturday": [{"start": "10:00", "end": "16:00"}]
+    },
+    "preferences": {
+      "notifications": {
+        "email": true,
+        "push": true,
+        "newMessages": true,
+        "newMatches": true
+      },
+      "privacy": {
+        "showLocation": true,
+        "showEmail": false
+      }
+    },
+    "isActive": true,
+    "createdAt": {"$date": "2026-01-22T10:00:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:00:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439022"},
+    "userId": {"$oid": "507f1f77bcf86cd799439012"},
+    "displayName": "Sarah Smith",
+    "bio": "UI/UX designer passionate about creating beautiful user experiences. Specialized in Figma, user research, and design systems.",
+    "skills": [
+      {
+        "name": "Figma",
+        "level": "expert",
+        "category": "Design"
+      },
+      {
+        "name": "Photoshop",
+        "level": "advanced",
+        "category": "Design"
+      },
+      {
+        "name": "User Research",
+        "level": "intermediate",
+        "category": "Design"
+      },
+      {
+        "name": "Prototyping",
+        "level": "advanced",
+        "category": "Design"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-74.0060, 40.7128],
+      "address": {
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001",
+        "country": "USA"
+      }
+    },
+    "radius": 30,
+    "avatarUrl": null,
+    "reputation": 200,
+    "rating": {
+      "average": 4.8,
+      "count": 15
+    },
+    "availability": {
+      "tuesday": [{"start": "19:00", "end": "22:00"}],
+      "thursday": [{"start": "19:00", "end": "22:00"}],
+      "sunday": [{"start": "14:00", "end": "18:00"}]
+    },
+    "preferences": {
+      "notifications": {
+        "email": true,
+        "push": true,
+        "newMessages": true,
+        "newMatches": true
+      },
+      "privacy": {
+        "showLocation": true,
+        "showEmail": false
+      }
+    },
+    "isActive": true,
+    "createdAt": {"$date": "2026-01-22T10:05:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:05:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439023"},
+    "userId": {"$oid": "507f1f77bcf86cd799439013"},
+    "displayName": "Mike Johnson",
+    "bio": "DevOps engineer with expertise in AWS, Docker, and CI/CD pipelines. Can help with cloud architecture and infrastructure automation.",
+    "skills": [
+      {
+        "name": "AWS",
+        "level": "expert",
+        "category": "DevOps"
+      },
+      {
+        "name": "Docker",
+        "level": "advanced",
+        "category": "DevOps"
+      },
+      {
+        "name": "Kubernetes",
+        "level": "intermediate",
+        "category": "DevOps"
+      },
+      {
+        "name": "CI/CD",
+        "level": "advanced",
+        "category": "DevOps"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-87.6298, 41.8781],
+      "address": {
+        "city": "Chicago",
+        "state": "IL",
+        "zipCode": "60601",
+        "country": "USA"
+      }
+    },
+    "radius": 20,
+    "avatarUrl": null,
+    "reputation": 120,
+    "rating": {
+      "average": 4.3,
+      "count": 8
+    },
+    "availability": {
+      "monday": [{"start": "17:00", "end": "20:00"}],
+      "friday": [{"start": "17:00", "end": "20:00"}]
+    },
+    "preferences": {
+      "notifications": {
+        "email": true,
+        "push": false,
+        "newMessages": true,
+        "newMatches": false
+      },
+      "privacy": {
+        "showLocation": true,
+        "showEmail": false
+      }
+    },
+    "isActive": true,
+    "createdAt": {"$date": "2026-01-22T10:10:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:10:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439024"},
+    "userId": {"$oid": "507f1f77bcf86cd799439014"},
+    "displayName": "Emily Chen",
+    "bio": "Data scientist and machine learning enthusiast. Love working with Python, TensorFlow, and data analysis. Happy to mentor beginners!",
+    "skills": [
+      {
+        "name": "Python",
+        "level": "expert",
+        "category": "Programming"
+      },
+      {
+        "name": "TensorFlow",
+        "level": "advanced",
+        "category": "ML"
+      },
+      {
+        "name": "SQL",
+        "level": "advanced",
+        "category": "Database"
+      },
+      {
+        "name": "Data Analysis",
+        "level": "expert",
+        "category": "Data Science"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-122.3321, 47.6062],
+      "address": {
+        "city": "Seattle",
+        "state": "WA",
+        "zipCode": "98101",
+        "country": "USA"
+      }
+    },
+    "radius": 35,
+    "avatarUrl": null,
+    "reputation": 180,
+    "rating": {
+      "average": 4.7,
+      "count": 12
+    },
+    "availability": {
+      "wednesday": [{"start": "18:00", "end": "21:00"}],
+      "saturday": [{"start": "09:00", "end": "13:00"}]
+    },
+    "preferences": {
+      "notifications": {
+        "email": true,
+        "push": true,
+        "newMessages": true,
+        "newMatches": true
+      },
+      "privacy": {
+        "showLocation": true,
+        "showEmail": false
+      }
+    },
+    "isActive": true,
+    "createdAt": {"$date": "2026-01-22T10:15:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:15:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439025"},
+    "userId": {"$oid": "507f1f77bcf86cd799439015"},
+    "displayName": "David Wilson",
+    "bio": "Mobile app developer specializing in React Native and Flutter. Can help with cross-platform mobile development and app architecture.",
+    "skills": [
+      {
+        "name": "React Native",
+        "level": "expert",
+        "category": "Mobile"
+      },
+      {
+        "name": "Flutter",
+        "level": "advanced",
+        "category": "Mobile"
+      },
+      {
+        "name": "iOS Development",
+        "level": "intermediate",
+        "category": "Mobile"
+      },
+      {
+        "name": "Android Development",
+        "level": "intermediate",
+        "category": "Mobile"
+      }
+    ],
+    "location": {
+      "type": "Point",
+      "coordinates": [-118.2437, 34.0522],
+      "address": {
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90001",
+        "country": "USA"
+      }
+    },
+    "radius": 40,
+    "avatarUrl": null,
+    "reputation": 100,
+    "rating": {
+      "average": 4.2,
+      "count": 6
+    },
+    "availability": {
+      "tuesday": [{"start": "19:00", "end": "22:00"}],
+      "thursday": [{"start": "19:00", "end": "22:00"}],
+      "sunday": [{"start": "10:00", "end": "15:00"}]
+    },
+    "preferences": {
+      "notifications": {
+        "email": true,
+        "push": true,
+        "newMessages": true,
+        "newMatches": true
+      },
+      "privacy": {
+        "showLocation": true,
+        "showEmail": false
+      }
+    },
+    "isActive": true,
+    "createdAt": {"$date": "2026-01-22T10:20:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:20:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439026"},
+    "userId": {"$oid": "507f1f77bcf86cd799439016"},
+    "displayName": "Admin User",
+    "bio": "Platform administrator",
+    "skills": [],
+    "location": {
+      "type": "Point",
+      "coordinates": [-122.4194, 37.7749],
+      "address": {
+        "city": "San Francisco",
+        "state": "CA",
+        "country": "USA"
+      }
+    },
+    "radius": 25,
+    "avatarUrl": null,
+    "reputation": 0,
+    "rating": {
+      "average": 0,
+      "count": 0
+    },
+    "availability": {},
+    "preferences": {
+      "notifications": {
+        "email": true,
+        "push": true,
+        "newMessages": true,
+        "newMatches": true
+      },
+      "privacy": {
+        "showLocation": true,
+        "showEmail": false
+      }
+    },
+    "isActive": true,
+    "createdAt": {"$date": "2026-01-22T09:00:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T09:00:00.000Z"}
+  }
+]

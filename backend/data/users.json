@@ -1,0 +1,68 @@
+[
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439011"},
+    "email": "john@example.com",
+    "password": "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyY5Y5Y5Y5Y5",
+    "emailVerified": true,
+    "roles": ["user"],
+    "isActive": true,
+    "tokenVersion": 1,
+    "createdAt": {"$date": "2026-01-22T10:00:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:00:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439012"},
+    "email": "sarah@example.com",
+    "password": "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyY5Y5Y5Y5Y5",
+    "emailVerified": true,
+    "roles": ["user"],
+    "isActive": true,
+    "tokenVersion": 1,
+    "createdAt": {"$date": "2026-01-22T10:05:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:05:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439013"},
+    "email": "mike@example.com",
+    "password": "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyY5Y5Y5Y5Y5",
+    "emailVerified": true,
+    "roles": ["user"],
+    "isActive": true,
+    "tokenVersion": 1,
+    "createdAt": {"$date": "2026-01-22T10:10:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:10:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439014"},
+    "email": "emily@example.com",
+    "password": "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyY5Y5Y5Y5Y5",
+    "emailVerified": true,
+    "roles": ["user"],
+    "isActive": true,
+    "tokenVersion": 1,
+    "createdAt": {"$date": "2026-01-22T10:15:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:15:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439015"},
+    "email": "david@example.com",
+    "password": "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyY5Y5Y5Y5Y5",
+    "emailVerified": true,
+    "roles": ["user"],
+    "isActive": true,
+    "tokenVersion": 1,
+    "createdAt": {"$date": "2026-01-22T10:20:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T10:20:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "507f1f77bcf86cd799439016"},
+    "email": "admin@skillexchange.com",
+    "password": "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyY5Y5Y5Y5Y5",
+    "emailVerified": true,
+    "roles": ["user", "admin"],
+    "isActive": true,
+    "tokenVersion": 1,
+    "createdAt": {"$date": "2026-01-22T09:00:00.000Z"},
+    "updatedAt": {"$date": "2026-01-22T09:00:00.000Z"}
+  }
+]
