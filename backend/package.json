@@ -16,6 +16,7 @@
     "ensure-indexes": "node src/scripts/ensureIndexes.js",
     "verify:listings": "node src/scripts/verifyListingOwners.js",
     "check:db": "node src/scripts/checkDatabase.js",
+    "check:threads": "node src/scripts/checkThreads.js",
     "test:connection": "node src/scripts/testConnection.js"
   },
   "dependencies": {
