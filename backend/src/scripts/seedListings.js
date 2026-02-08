@@ -32,28 +32,109 @@ async function seedListings() {
 
     // Convert MongoDB ObjectId format to actual ObjectIds
     const listings = listingsData.map(listing => {
+      const convertedListing = { ...listing };
+      
       // Convert _id if it exists
-      if (listing._id && listing._id.$oid) {
-        listing._id = new mongoose.Types.ObjectId(listing._id.$oid);
+      if (convertedListing._id && convertedListing._id.$oid) {
+        convertedListing._id = new mongoose.Types.ObjectId(convertedListing._id.$oid);
       }
       
       // Convert ownerId if it exists
-      if (listing.ownerId && listing.ownerId.$oid) {
-        listing.ownerId = new mongoose.Types.ObjectId(listing.ownerId.$oid);
+      if (convertedListing.ownerId && convertedListing.ownerId.$oid) {
+        convertedListing.ownerId = new mongoose.Types.ObjectId(convertedListing.ownerId.$oid);
       }
 
       // Ensure location.coordinates is properly formatted
-      if (listing.location && listing.location.coordinates) {
-        listing.location.coordinates = listing.location.coordinates.map(Number);
+      if (convertedListing.location && convertedListing.location.coordinates) {
+        convertedListing.location.coordinates = convertedListing.location.coordinates.map(Number);
       }
 
-      return listing;
+      // Convert date fields
+      if (convertedListing.createdAt && convertedListing.createdAt.$date) {
+        convertedListing.createdAt = new Date(convertedListing.createdAt.$date);
+      }
+      if (convertedListing.updatedAt && convertedListing.updatedAt.$date) {
+        convertedListing.updatedAt = new Date(convertedListing.updatedAt.$date);
+      }
+      if (convertedListing.expiresAt && convertedListing.expiresAt.$date) {
+        convertedListing.expiresAt = new Date(convertedListing.expiresAt.$date);
+      }
+
+      return convertedListing;
     });
+
+    // Validate first listing as a test
+    console.log('\nValidating listing data...');
+    try {
+      const testListing = new Listing(listings[0]);
+      await testListing.validate();
+      console.log('  ✓ Sample listing validation passed');
+    } catch (validationError) {
+      console.error('  ✗ Validation error in sample listing:');
+      console.error('    ', validationError.message);
+      if (validationError.errors) {
+        Object.keys(validationError.errors).forEach(key => {
+          console.error(`    - ${key}: ${validationError.errors[key].message}`);
+        });
+      }
+      throw validationError;
+    }
 
     // Insert listings
     console.log('\nInserting listings into database...');
-    const result = await Listing.insertMany(listings, { ordered: false });
-    console.log(`✓ Successfully inserted ${result.length} listings`);
+    try {
+      const result = await Listing.insertMany(listings, { ordered: false });
+      if (result.length === 0) {
+        console.error('✗ Warning: insertMany returned 0 listings');
+        console.error('  This might indicate all listings failed validation or are duplicates');
+        // Try inserting one at a time to see the actual error
+        console.log('\n  Attempting to insert listings one by one to diagnose...');
+        let successCount = 0;
+        for (let i = 0; i < listings.length; i++) {
+          try {
+            const listing = new Listing(listings[i]);
+            await listing.save();
+            successCount++;
+            console.log(`  ✓ Inserted listing ${i + 1}: ${listing.title}`);
+          } catch (err) {
+            console.error(`  ✗ Failed to insert listing ${i + 1}: ${listings[i].title}`);
+            console.error(`    Error: ${err.message}`);
+            if (err.code === 11000) {
+              console.error(`    → Duplicate key (listing already exists)`);
+            }
+          }
+        }
+        console.log(`\n✓ Successfully inserted ${successCount} out of ${listings.length} listings`);
+      } else {
+        console.log(`✓ Successfully inserted ${result.length} listings`);
+      }
+    } catch (error) {
+      if (error.writeErrors) {
+        console.error(`\n✗ Failed to insert ${error.writeErrors.length} listings`);
+        error.writeErrors.slice(0, 10).forEach((err, i) => {
+          console.error(`  Error ${i + 1}:`, err.errmsg || err.message);
+          if (err.err && err.err.code === 11000) {
+            console.error(`    → Duplicate key error`);
+          }
+        });
+        if (error.writeErrors.length > 10) {
+          console.error(`  ... and ${error.writeErrors.length - 10} more errors`);
+        }
+        // Count successful inserts
+        const successCount = listings.length - error.writeErrors.length;
+        if (successCount > 0) {
+          console.log(`\n✓ Successfully inserted ${successCount} listings`);
+        }
+      } else {
+        console.error('✗ Error inserting listings:', error.message);
+        if (error.errors) {
+          Object.keys(error.errors).forEach(key => {
+            console.error(`  - ${key}: ${error.errors[key].message}`);
+          });
+        }
+      }
+      // Don't throw - allow script to continue
+    }
 
     // Ensure indexes are created
     console.log('\nEnsuring indexes...');
