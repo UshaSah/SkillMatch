@@ -11,12 +11,12 @@
     "lint:fix": "eslint src/ --fix",
     "seed": "node src/scripts/seedListings.js",
     "seed:clear": "node src/scripts/seedListings.js --clear",
-    "generate:import": "node src/scripts/generateImportData.js",
+    "seed:threads": "node src/scripts/seedThreads.js",
+    "seed:threads:clear": "node src/scripts/seedThreads.js --clear",
     "ensure-indexes": "node src/scripts/ensureIndexes.js",
-    "diagnose": "node src/scripts/diagnoseListings.js",
-    "check": "node src/scripts/checkListings.js",
-    "quick-fix": "node src/scripts/quickFix.js",
-    "fix-listings": "node src/scripts/fixListings.js"
+    "verify:listings": "node src/scripts/verifyListingOwners.js",
+    "check:db": "node src/scripts/checkDatabase.js",
+    "test:connection": "node src/scripts/testConnection.js"
   },
   "dependencies": {
     "express": "^4.18.2",
