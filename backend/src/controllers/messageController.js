@@ -182,9 +182,11 @@ const getThread = async (req, res, next) => {
     }
 
     // Check if user is a participant
-    const isParticipant = thread.participants.some(
-      p => p.userId.toString() === userId.toString() && p.isActive
-    );
+    // Handle both populated and non-populated userId
+    const isParticipant = thread.participants.some(p => {
+      const participantUserId = p.userId._id ? p.userId._id.toString() : p.userId.toString();
+      return participantUserId === userId.toString() && p.isActive;
+    });
 
     if (!isParticipant) {
       throw new AppError('Unauthorized access to thread', 403);

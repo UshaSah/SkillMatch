@@ -80,8 +80,8 @@ async function runTests() {
     });
 
     if (response.status === 201 && response.body.success) {
-      accessToken1 = response.body.data.accessToken;
-      userId1 = response.body.data.user._id;
+      accessToken1 = response.body.data.tokens.accessToken;
+      userId1 = response.body.data.user.id;
       console.log('   ✓ User 1 registered');
       console.log(`   ✓ User ID: ${userId1}`);
       passed++;
@@ -110,8 +110,8 @@ async function runTests() {
     });
 
     if (response.status === 201 && response.body.success) {
-      accessToken2 = response.body.data.accessToken;
-      userId2 = response.body.data.user._id;
+      accessToken2 = response.body.data.tokens.accessToken;
+      userId2 = response.body.data.user.id;
       console.log('   ✓ User 2 registered');
       console.log(`   ✓ User ID: ${userId2}`);
       passed++;
