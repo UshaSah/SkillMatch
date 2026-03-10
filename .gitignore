@@ -103,3 +103,14 @@ junit.xml
 
 # Debug logs
 .cursor/debug.log
+
+# Python virtual environment
+backend/venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.csv
+.cursor/

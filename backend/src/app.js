@@ -9,6 +9,7 @@ const connectDB = require('./config/database');
 const logger = require('./utils/logger');
 const { errorHandler } = require('./middleware/errorHandler');
 const requestId = require('./middleware/requestId');
+const metricsMiddleware = require('./middleware/metrics');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -46,6 +47,9 @@ app.use(limiter);
 
 // Request ID middleware
 app.use(requestId);
+
+// Metrics middleware (track API requests and responses)
+app.use(metricsMiddleware);
 
 // Logging middleware
 app.use(morgan('combined', {

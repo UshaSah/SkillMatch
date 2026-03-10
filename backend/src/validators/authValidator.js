@@ -21,11 +21,10 @@ const registerSchema = Joi.object({
   displayName: Joi.string()
     .min(2)
     .max(50)
-    .required()
+    .optional()
     .messages({
       'string.min': 'Display name must be at least 2 characters',
-      'string.max': 'Display name cannot exceed 50 characters',
-      'any.required': 'Display name is required'
+      'string.max': 'Display name cannot exceed 50 characters'
     })
 });
 

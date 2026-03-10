@@ -4,6 +4,7 @@ const Profile = require('../models/Profile');
 const { generateTokenPair, verifyToken } = require('../utils/jwt');
 const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
+const metricsService = require('../services/aws/metricsService');
 
 /**
  * Register a new user
@@ -17,6 +18,9 @@ const register = async (req, res, next) => {
     if (existingUser) {
       throw new AppError('Email already registered', 409, 'EMAIL_EXISTS');
     }
+
+    // Auto-generate displayName from email if not provided
+    const finalDisplayName = displayName || email.split('@')[0];
 
     // Create user
     const user = new User({
@@ -34,7 +38,7 @@ const register = async (req, res, next) => {
     // Create profile
     const profile = new Profile({
       userId: user._id,
-      displayName,
+      displayName: finalDisplayName,
       skills: [],
       location: {
         type: 'Point',
@@ -53,6 +57,9 @@ const register = async (req, res, next) => {
       userId: user._id,
       email: user.email
     });
+
+    // Track registration metric
+    metricsService.trackAuth('register', true);
 
     // TODO: Queue email verification notification
     // await queueEmailVerification(user.email, emailVerificationToken);
@@ -93,6 +100,9 @@ const login = async (req, res, next) => {
     const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
 
     if (!user) {
+      // Track failed login
+      metricsService.trackAuth('login', false, 'user_not_found');
+      
       // Increment login attempts for security
       // (We can't increment on non-existent user, but we log it)
       logger.warn('Login attempt with non-existent email', {
@@ -114,6 +124,7 @@ const login = async (req, res, next) => {
 
     // Check if account is active
     if (!user.isActive) {
+      metricsService.trackAuth('login', false, 'account_inactive');
       throw new AppError('Account is inactive', 401, 'ACCOUNT_INACTIVE');
     }
 
@@ -146,6 +157,9 @@ const login = async (req, res, next) => {
       userId: user._id,
       email: user.email
     });
+
+    // Track successful login
+    metricsService.trackAuth('login', true);
 
     res.json({
       success: true,
