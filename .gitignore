@@ -77,9 +77,6 @@ frontend/out/
 backend/logs/
 backend/uploads/
 
-# Docker
-.dockerignore
-
 # Temporary files
 *.tmp
 *.temp
