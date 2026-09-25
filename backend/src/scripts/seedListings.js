@@ -56,9 +56,9 @@ async function seedListings() {
       if (convertedListing.updatedAt && convertedListing.updatedAt.$date) {
         convertedListing.updatedAt = new Date(convertedListing.updatedAt.$date);
       }
-      if (convertedListing.expiresAt && convertedListing.expiresAt.$date) {
-        convertedListing.expiresAt = new Date(convertedListing.expiresAt.$date);
-      }
+      // Drop the stale expiresAt so the schema default (+30 days) applies;
+      // otherwise the TTL index (expireAfterSeconds: 0) purges these rows within ~60s.
+      delete convertedListing.expiresAt;
 
       return convertedListing;
     });
