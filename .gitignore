@@ -12,6 +12,9 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 
+# Local dev JWTs for curl (see backend/docs/curl-auth-tokens.md)
+backend/.dev-tokens.sh
+
 # Logs
 logs/
 *.log
