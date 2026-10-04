@@ -15,6 +15,9 @@ lerna-debug.log*
 # Local dev JWTs for curl (see backend/docs/curl-auth-tokens.md)
 backend/.dev-tokens.sh
 
+# Personal notes / build plans (not for the repo)
+BUILD_PLAN.local.md
+
 # Logs
 logs/
 *.log

@@ -1,5 +1,64 @@
 import axios from 'axios';
-import { AuthResponse, User, Listing, Profile, Thread, Message } from '@/types';
+import {
+  AuthResponse,
+  AuthSession,
+  User,
+  Listing,
+  Profile,
+  ProfileUpdateInput,
+  Thread,
+  Message,
+} from '@/types';
+
+function normalizeUser(raw: Record<string, unknown>): User {
+  const id = raw._id ?? raw.id;
+  return {
+    _id: String(id ?? ''),
+    email: String(raw.email ?? ''),
+    emailVerified: Boolean(raw.emailVerified),
+    createdAt: raw.createdAt ? String(raw.createdAt) : undefined,
+  };
+}
+
+function normalizeProfile(raw: Record<string, unknown> | null): Profile | null {
+  if (!raw) return null;
+  const id = raw._id ?? raw.id;
+  const userId = raw.userId;
+  const location = (raw.location as Profile['location']) ?? {
+    coordinates: [0, 0] as [number, number],
+  };
+  const skills = Array.isArray(raw.skills) ? raw.skills : [];
+
+  return {
+    _id: String(id ?? ''),
+    userId: String(userId ?? ''),
+    displayName: String(raw.displayName ?? ''),
+    bio: raw.bio != null ? String(raw.bio) : undefined,
+    skills: skills.map((s) => {
+      if (typeof s === 'string') {
+        return { name: s, category: 'General', level: 'intermediate' as const };
+      }
+      const skill = s as Record<string, unknown>;
+      return {
+        name: String(skill.name ?? ''),
+        level: skill.level as Profile['skills'][0]['level'],
+        category: String(skill.category ?? 'General'),
+      };
+    }),
+    location: {
+      type: location.type,
+      coordinates: (location.coordinates?.length === 2
+        ? location.coordinates
+        : [0, 0]) as [number, number],
+      address: location.address,
+    },
+    radius: raw.radius != null ? Number(raw.radius) : undefined,
+    avatarUrl: raw.avatarUrl != null ? String(raw.avatarUrl) : null,
+    reputation: raw.reputation != null ? Number(raw.reputation) : undefined,
+    createdAt: raw.createdAt ? String(raw.createdAt) : undefined,
+    updatedAt: raw.updatedAt ? String(raw.updatedAt) : undefined,
+  };
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -56,7 +115,7 @@ export const authApi = {
       return {
         accessToken: response.data.data.tokens.accessToken,
         refreshToken: response.data.data.tokens.refreshToken,
-        user: response.data.data.user
+        user: normalizeUser(response.data.data.user),
       };
     }
     return response.data;
@@ -68,14 +127,24 @@ export const authApi = {
       return {
         accessToken: response.data.data.tokens.accessToken,
         refreshToken: response.data.data.tokens.refreshToken,
-        user: response.data.data.user
+        user: normalizeUser(response.data.data.user),
       };
     }
     return response.data;
   },
-  getMe: async (): Promise<User> => {
+  getMe: async (): Promise<AuthSession> => {
     const response = await api.get('/auth/me');
-    return response.data;
+    if (response.data.success && response.data.data?.user) {
+      return {
+        user: normalizeUser(response.data.data.user),
+        profile: normalizeProfile(response.data.data.profile ?? null),
+      };
+    }
+    const rawUser = response.data.user ?? response.data;
+    return {
+      user: normalizeUser(rawUser),
+      profile: normalizeProfile(response.data.profile ?? response.data.data?.profile ?? null),
+    };
   },
   logout: async (): Promise<void> => {
     await api.post('/auth/logout');
@@ -84,13 +153,27 @@ export const authApi = {
 
 // User API
 export const userApi = {
-  getProfile: async (): Promise<Profile> => {
+  getProfile: async (): Promise<Profile | null> => {
     const response = await api.get('/users/me');
-    return response.data;
+    if (response.data.success && response.data.data) {
+      return normalizeProfile(response.data.data.profile);
+    }
+    return normalizeProfile(response.data.profile ?? response.data);
   },
-  updateProfile: async (data: Partial<Profile>): Promise<Profile> => {
+  updateProfile: async (data: ProfileUpdateInput): Promise<Profile> => {
     const response = await api.put('/users/me', data);
-    return response.data;
+    if (response.data.success && response.data.data?.profile) {
+      const profile = normalizeProfile(response.data.data.profile);
+      if (!profile) {
+        throw new Error('Profile update returned empty profile');
+      }
+      return profile;
+    }
+    const profile = normalizeProfile(response.data.profile ?? response.data);
+    if (!profile) {
+      throw new Error('Profile update failed');
+    }
+    return profile;
   },
 };
 

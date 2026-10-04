@@ -2,7 +2,13 @@ export interface User {
   _id: string;
   email: string;
   emailVerified: boolean;
-  createdAt: string;
+  createdAt?: string;
+}
+
+export interface ProfileSkill {
+  name: string;
+  level?: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  category: string;
 }
 
 export interface Profile {
@@ -10,14 +16,35 @@ export interface Profile {
   userId: string;
   displayName: string;
   bio?: string;
-  skills: string[];
-  location?: {
-    type: 'Point';
+  skills: ProfileSkill[];
+  location: {
+    type?: 'Point';
     coordinates: [number, number];
+    address?: {
+      street?: string;
+      city?: string;
+      state?: string;
+      zipCode?: string;
+      country?: string;
+    };
   };
-  avatarUrl?: string;
-  reputation: number;
+  radius?: number;
+  avatarUrl?: string | null;
+  reputation?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
+
+export type ProfileUpdateInput = {
+  displayName?: string;
+  bio?: string;
+  skills?: ProfileSkill[];
+  radius?: number;
+  location?: {
+    coordinates: [number, number];
+    address?: Profile['location']['address'];
+  };
+};
 
 export interface Listing {
   _id: string;
@@ -75,4 +102,10 @@ export interface AuthResponse {
   accessToken: string;
   refreshToken?: string;
   user: User;
+}
+
+/** Current user + profile from GET /auth/me (no tokens). */
+export interface AuthSession {
+  user: User;
+  profile: Profile | null;
 }
