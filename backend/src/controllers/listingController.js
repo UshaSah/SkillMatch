@@ -3,6 +3,11 @@ const Profile = require('../models/Profile');
 const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 
+/** Same rule as default search: active listings only */
+function isPubliclyVisible(listing) {
+  return listing.isActive && listing.status === 'active';
+}
+
 /**
  * Create a new listing
  */
@@ -49,7 +54,12 @@ const getListing = async (req, res, next) => {
 
     const listing = await Listing.findById(id).populate('ownerId', 'email');
 
+
     if (!listing) {
+      throw new AppError('Listing not found', 404, 'LISTING_NOT_FOUND');
+    }
+
+    if (!isPubliclyVisible(listing)) {
       throw new AppError('Listing not found', 404, 'LISTING_NOT_FOUND');
     }
 
@@ -349,6 +359,10 @@ const updateListing = async (req, res, next) => {
       );
     }
 
+    if (!isPubliclyVisible(listing)) {
+      throw new AppError('Listing not found', 404, 'LISTING_NOT_FOUND');
+    }
+
     // Update fields
     Object.keys(updates).forEach(key => {
       if (key !== 'ownerId' && key !== '_id') {
@@ -402,6 +416,14 @@ const deleteListing = async (req, res, next) => {
         403,
         'FORBIDDEN'
       );
+    }
+
+    if (!isPubliclyVisible(listing)) {
+      return res.json({
+        success: true,
+        message: 'Listing already deleted',
+        requestId: req.requestId
+      });
     }
 
     // Soft delete - set status to cancelled

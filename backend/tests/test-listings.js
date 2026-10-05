@@ -355,13 +355,12 @@ async function testListings() {
         method: 'GET'
       });
 
-      // Should either be 404 or return with status 'cancelled'
-      if (response.status === 404 || (response.body.data?.listing?.status === 'cancelled')) {
-        console.log('   ✓ Deleted listing handled correctly');
+      if (response.status === 404) {
+        console.log('   ✓ Deleted listing not accessible by ID');
         passed++;
       } else {
-        console.log('   ⚠ Listing still accessible (soft delete)');
-        passed++; // Soft delete is acceptable
+        console.log('   ✗ Expected 404 for cancelled listing, got:', response.status, response.body);
+        failed++;
       }
     }
   } catch (error) {

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { listingsApi } from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
+import { AppNav } from '@/components/AppNav';
 import Link from 'next/link';
 
 interface Skill {
@@ -14,7 +15,7 @@ interface Skill {
 
 export default function CreateListingPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
@@ -45,11 +46,11 @@ export default function CreateListingPage() {
     category: 'General'
   });
 
-  // Redirect if not authenticated
-  if (!user) {
-    router.push('/login');
-    return null;
-  }
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, authLoading, router]);
 
   const handleAddSkill = () => {
     if (newSkill.name.trim()) {
@@ -127,27 +128,21 @@ export default function CreateListingPage() {
     }
   };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/dashboard" className="text-xl font-bold text-blue-600">
-                SkillMatch
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/listings"
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Browse Listings
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <AppNav />
 
       <div className="max-w-3xl mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-md p-6">
