@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, createContext, useContext, ReactNode, useCallback } from 'react';
-import { authApi } from '@/lib/api';
+import { authApi, setAuthTokens, clearAuthTokens, ACCESS_TOKEN_KEY } from '@/lib/api';
 import { User, Profile } from '@/types';
 
 interface AuthContextType {
@@ -10,7 +10,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   refreshSession: () => Promise<void>;
 }
 
@@ -32,11 +32,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [applySession]);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     if (token) {
       refreshSession()
         .catch(() => {
-          localStorage.removeItem('accessToken');
+          clearAuthTokens();
           setUser(null);
           setProfile(null);
         })
@@ -48,17 +48,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     const response = await authApi.login(email, password);
-    localStorage.setItem('accessToken', response.accessToken);
+    setAuthTokens(response.accessToken, response.refreshToken);
     await refreshSession();
   };
 
   const register = async (email: string, password: string) => {
-    await authApi.register(email, password);
-    await login(email, password);
+    const response = await authApi.register(email, password);
+    setAuthTokens(response.accessToken, response.refreshToken);
+    await refreshSession();
   };
 
-  const logout = () => {
-    localStorage.removeItem('accessToken');
+  const logout = async () => {
+    try {
+      await authApi.logout();
+    } catch {
+      // Still clear local session if token expired or network fails
+    }
+    clearAuthTokens();
     setUser(null);
     setProfile(null);
     window.location.href = '/';

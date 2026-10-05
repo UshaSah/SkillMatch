@@ -1,4 +1,8 @@
-import axios from 'axios';
+import axios, { InternalAxiosRequestConfig } from 'axios';
+
+interface RetryAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
 import {
   AuthResponse,
   AuthSession,
@@ -62,6 +66,23 @@ function normalizeProfile(raw: Record<string, unknown> | null): Profile | null {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
+export const ACCESS_TOKEN_KEY = 'accessToken';
+export const REFRESH_TOKEN_KEY = 'refreshToken';
+
+export function setAuthTokens(accessToken: string, refreshToken?: string) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+  if (refreshToken) {
+    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  }
+}
+
+export function clearAuthTokens() {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
+}
+
 const api = axios.create({
   baseURL: `${API_URL}/api`,
   headers: {
@@ -69,10 +90,67 @@ const api = axios.create({
   },
 });
 
+/** Avoid interceptor loop; refresh uses this client directly. */
+const refreshClient = axios.create({
+  baseURL: `${API_URL}/api`,
+  headers: { 'Content-Type': 'application/json' },
+});
+
+function authRequestSkipsRefresh(url?: string): boolean {
+  if (!url) return false;
+  return (
+    url.includes('/auth/login') ||
+    url.includes('/auth/register') ||
+    url.includes('/auth/refresh')
+  );
+}
+
+function redirectToLogin() {
+  if (typeof window === 'undefined') return;
+  if (
+    !window.location.pathname.includes('/login') &&
+    !window.location.pathname.includes('/register')
+  ) {
+    window.location.href = '/login';
+  }
+}
+
+function clearSessionAndRedirect() {
+  clearAuthTokens();
+  redirectToLogin();
+}
+
+let refreshInFlight: Promise<string> | null = null;
+
+async function refreshAccessToken(): Promise<string> {
+  const refreshToken =
+    typeof window !== 'undefined' ? localStorage.getItem(REFRESH_TOKEN_KEY) : null;
+  if (!refreshToken) {
+    throw new Error('No refresh token');
+  }
+
+  const response = await refreshClient.post('/auth/refresh', { refreshToken });
+  if (response.data?.success && response.data.data?.tokens) {
+    const { accessToken, refreshToken: newRefreshToken } = response.data.data.tokens;
+    setAuthTokens(accessToken, newRefreshToken);
+    return accessToken;
+  }
+  throw new Error('Token refresh failed');
+}
+
+function refreshAccessTokenDeduped(): Promise<string> {
+  if (!refreshInFlight) {
+    refreshInFlight = refreshAccessToken().finally(() => {
+      refreshInFlight = null;
+    });
+  }
+  return refreshInFlight;
+}
+
 // Add auth token to requests
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -80,29 +158,49 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle token refresh on 401
+// On 401: refresh access token once and retry; otherwise clear session
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    // Log network errors for debugging
     if (!error.response) {
       console.error('Network Error:', {
         message: error.message,
         code: error.code,
         url: error.config?.url,
-        baseURL: error.config?.baseURL
+        baseURL: error.config?.baseURL,
       });
+      return Promise.reject(error);
     }
-    
-    if (error.response?.status === 401 && typeof window !== 'undefined') {
-      // Handle token refresh or redirect to login
-      localStorage.removeItem('accessToken');
-      // Don't redirect if we're already on login/register page
-      if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/register')) {
-        window.location.href = '/login';
+
+    const status = error.response.status;
+    const originalRequest = error.config as RetryAxiosRequestConfig | undefined;
+
+    if (status !== 401 || typeof window === 'undefined' || !originalRequest) {
+      return Promise.reject(error);
+    }
+
+    if (authRequestSkipsRefresh(originalRequest.url) || originalRequest._retry) {
+      if (!authRequestSkipsRefresh(originalRequest.url)) {
+        clearSessionAndRedirect();
       }
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
+
+    if (!localStorage.getItem(REFRESH_TOKEN_KEY)) {
+      clearSessionAndRedirect();
+      return Promise.reject(error);
+    }
+
+    originalRequest._retry = true;
+
+    try {
+      const accessToken = await refreshAccessTokenDeduped();
+      originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+      return api(originalRequest);
+    } catch (refreshError) {
+      clearSessionAndRedirect();
+      return Promise.reject(refreshError);
+    }
   }
 );
 
