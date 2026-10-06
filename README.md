@@ -143,3 +143,20 @@ DB write succeeds
 process crashes
        ↓
 SQS publish never happens
+
+### Guided Skill Exchange ✨
+This is where the new feature goes.
+
+Problem:
+A successful match doesn't necessarily lead to a successful exchange.
+
+Solution:
+SkillMatch turns complementary matches into structured,
+personalized learning exchanges.
+
+Flow:
+Match → Generate Plan → Review/Edit → Accept →
+Complete Sessions → Track Progress
+
+[Include screenshot/GIF here]
+
