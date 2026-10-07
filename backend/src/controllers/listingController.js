@@ -8,6 +8,10 @@ function isPubliclyVisible(listing) {
   return listing.isActive && listing.status === 'active';
 }
 
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 /**
  * Create a new listing
  */
@@ -105,6 +109,7 @@ const getListing = async (req, res, next) => {
 const searchListings = async (req, res, next) => {
   try {
     const {
+      q,
       type,
       skills,
       category,
@@ -140,9 +145,18 @@ const searchListings = async (req, res, next) => {
       query.timeCommitment = timeCommitment;
     }
 
-    // Filter by remote
-    if (isRemote !== undefined) {
-      query.isRemote = isRemote === 'true';
+    // Filter by remote (query strings arrive as strings; Joi may coerce to boolean)
+    if (isRemote !== undefined && isRemote !== '') {
+      const remoteOn =
+        isRemote === true || isRemote === 'true' || isRemote === '1';
+      query.isRemote = remoteOn;
+    }
+
+    // Text search on title and description
+    const searchText = typeof q === 'string' ? q.trim() : '';
+    if (searchText) {
+      const textRegex = new RegExp(escapeRegExp(searchText), 'i');
+      query.$or = [{ title: textRegex }, { description: textRegex }];
     }
 
     // Filter by skills

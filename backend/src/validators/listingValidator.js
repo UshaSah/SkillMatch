@@ -133,6 +133,7 @@ const updateListingSchema = Joi.object({
 
 // Search/query validation schema
 const searchListingSchema = Joi.object({
+  q: Joi.string().trim().max(200).optional().allow(''),
   type: Joi.string().valid('offer', 'request').optional(),
   skills: Joi.alternatives().try(
     Joi.string().trim(),

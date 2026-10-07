@@ -278,11 +278,16 @@ export const userApi = {
 // Listings API
 export const listingsApi = {
   search: async (params?: {
+    q?: string;
     type?: 'offer' | 'request';
-    skills?: string[];
+    skills?: string | string[];
+    category?: string;
+    isRemote?: boolean;
+    timeCommitment?: string;
     status?: string;
     page?: number;
     limit?: number;
+    sortBy?: 'newest' | 'oldest' | 'distance' | 'popularity';
   }): Promise<{ listings: Listing[]; total: number }> => {
     try {
       console.log('API: Calling /listings with params:', params);
