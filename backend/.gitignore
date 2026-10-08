@@ -63,3 +63,5 @@ Thumbs.db
 # Build outputs
 dist/
 build/
+backend/.curl-notes.local.md
+backend/.dev-token.sh

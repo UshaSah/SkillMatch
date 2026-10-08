@@ -13,7 +13,7 @@ lerna-debug.log*
 .env.production.local
 
 # Local dev JWTs for curl (see backend/docs/curl-auth-tokens.md)
-backend/.dev-tokens.sh
+.dev-tokens.sh
 
 # Personal notes / build plans (not for the repo)
 BUILD_PLAN.local.md
