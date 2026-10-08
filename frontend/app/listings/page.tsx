@@ -1,20 +1,27 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { listingsApi } from '@/lib/api';
+import { useAuth } from '@/hooks/useAuth';
+import { AppNav } from '@/components/AppNav';
 import { Listing } from '@/types';
 import Link from 'next/link';
 
 export default function ListingsPage() {
+  const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchListings();
-  }, []);
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, authLoading, router]);
 
-  const fetchListings = async () => {
+  const fetchListings = useCallback(async () => {
     try {
       setLoading(true);
       setError('');
@@ -51,10 +58,42 @@ export default function ListingsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (authLoading || !user) {
+      return;
+    }
+    void fetchListings();
+  }, [user, authLoading, fetchListings]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-lg text-gray-900">Checking session…</div>
+          <p className="text-sm text-gray-500 mt-1">Verifying your login</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <AppNav />
+        <div className="min-h-[50vh] flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-lg text-gray-900">Loading listings…</div>
+            <p className="text-sm text-gray-500 mt-1">Fetching skill exchanges</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
@@ -62,6 +101,7 @@ export default function ListingsPage() {
     
     return (
       <div className="min-h-screen bg-gray-50">
+        <AppNav />
         <div className="container mx-auto px-4 py-8">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-2xl">
             <h2 className="text-red-800 font-bold mb-2 text-xl">Error Loading Listings</h2>
@@ -101,16 +141,9 @@ export default function ListingsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <AppNav />
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Browse Listings</h1>
-          <Link
-            href="/listings/new"
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-          >
-            Create Listing
-          </Link>
-        </div>
+        <h1 className="text-3xl font-bold mb-6">Browse Listings</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {listings.length === 0 ? (
             <div className="col-span-full text-center py-12 text-gray-500">

@@ -52,8 +52,7 @@ const getListing = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const listing = await Listing.findById(id).populate('ownerId', 'email');
-
+    const listing = await Listing.findById(id);
 
     if (!listing) {
       throw new AppError('Listing not found', 404, 'LISTING_NOT_FOUND');
@@ -63,9 +62,15 @@ const getListing = async (req, res, next) => {
       throw new AppError('Listing not found', 404, 'LISTING_NOT_FOUND');
     }
 
-    // Get owner's profile if exists
-    const ownerProfile = await Profile.findOne({ userId: listing.ownerId._id })
-      .select('displayName avatarUrl skills rating reputation');
+    const ownerId = listing.ownerId;
+    await listing.populate('ownerId', 'email');
+
+    // Profile is keyed by userId; owner user may be missing (e.g. seed/orphan listings)
+    let ownerProfile = null;
+    if (ownerId) {
+      ownerProfile = await Profile.findOne({ userId: ownerId })
+        .select('displayName avatarUrl skills rating reputation');
+    }
 
     // Increment view count (async, don't wait)
     listing.incrementViewCount().catch(err => {
@@ -74,10 +79,11 @@ const getListing = async (req, res, next) => {
 
     // Add owner profile to response
     const listingObj = listing.toObject();
-    if (ownerProfile) {
+    const populatedOwner = listing.ownerId;
+    if (ownerProfile || populatedOwner) {
       listingObj.owner = {
-        email: listing.ownerId.email,
-        profile: ownerProfile
+        email: populatedOwner?.email ?? null,
+        profile: ownerProfile ?? undefined
       };
     }
 

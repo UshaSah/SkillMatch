@@ -308,7 +308,10 @@ export const listingsApi = {
   },
   getById: async (id: string): Promise<Listing> => {
     const response = await api.get(`/listings/${id}`);
-    return response.data;
+    if (response.data.success && response.data.data?.listing) {
+      return response.data.data.listing as Listing;
+    }
+    return response.data.listing ?? response.data;
   },
   create: async (data: {
     type: 'offer' | 'request';

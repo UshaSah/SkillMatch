@@ -78,6 +78,16 @@ export interface Listing {
     description?: string;
   };
   timeCommitment?: 'one-time' | 'short-term' | 'long-term' | 'ongoing';
+  isRemote?: boolean;
+  /** Present on GET /listings/:id when backend attaches owner profile */
+  owner?: {
+    email?: string;
+    profile?: {
+      displayName?: string;
+      avatarUrl?: string | null;
+      reputation?: number;
+    };
+  };
 }
 
 export interface Message {

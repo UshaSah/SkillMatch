@@ -129,7 +129,7 @@ export default function ProfilePage() {
 
       applyProfileToForm(updated, user!.email);
       await refreshSession();
-      router.replace('/dashboard');
+      router.replace('/dashboard?profileSaved=1');
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { error?: { details?: { message: string }[]; message?: string } } } };
       const details = axiosErr.response?.data?.error?.details;
@@ -223,19 +223,27 @@ export default function ProfilePage() {
 
           <div>
             <span className={sectionLabelClass}>Skills</span>
-            <div className="flex flex-col sm:flex-row gap-2 mb-3">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-2 mb-3">
               <input
                 type="text"
                 value={newSkill.name}
                 onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
                 placeholder="Skill name"
-                className={`flex-1 px-4 py-2 ${fieldClass}`}
+                className={`flex-1 min-w-[140px] px-4 py-2 ${fieldClass}`}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
                     handleAddSkill();
                   }
                 }}
+              />
+              <input
+                type="text"
+                value={newSkill.category}
+                onChange={(e) => setNewSkill({ ...newSkill, category: e.target.value })}
+                placeholder="Category"
+                className={`sm:w-36 px-4 py-2 ${fieldClass}`}
+                maxLength={50}
               />
               <select
                 value={newSkill.level}
@@ -267,7 +275,7 @@ export default function ProfilePage() {
                     key={`${skill.name}-${index}`}
                     className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full flex items-center gap-2 text-sm"
                   >
-                    {skill.name} ({skill.level})
+                    {skill.name} ({skill.level} · {skill.category})
                     <button
                       type="button"
                       onClick={() => handleRemoveSkill(index)}
