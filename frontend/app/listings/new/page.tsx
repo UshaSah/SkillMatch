@@ -13,6 +13,9 @@ interface Skill {
   category: string;
 }
 
+const fieldClass =
+  'text-gray-900 placeholder:text-gray-500 bg-white border border-gray-300 rounded-lg';
+
 export default function CreateListingPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
@@ -198,7 +201,7 @@ export default function CreateListingPage() {
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="e.g., JavaScript Tutoring - React & Node.js"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className={`w-full px-4 py-2 ${fieldClass} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                 required
                 minLength={5}
                 maxLength={100}
@@ -216,7 +219,7 @@ export default function CreateListingPage() {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Describe what you're offering or requesting in detail..."
                 rows={6}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className={`w-full px-4 py-2 ${fieldClass} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                 required
                 minLength={10}
                 maxLength={1000}
@@ -235,7 +238,7 @@ export default function CreateListingPage() {
                   value={newSkill.name}
                   onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
                   placeholder="Skill name (e.g., JavaScript)"
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg"
+                  className={`flex-1 px-4 py-2 ${fieldClass}`}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -246,7 +249,7 @@ export default function CreateListingPage() {
                 <select
                   value={newSkill.level}
                   onChange={(e) => setNewSkill({ ...newSkill, level: e.target.value as any })}
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
+                  className={`px-4 py-2 ${fieldClass}`}
                 >
                   <option value="beginner">Beginner</option>
                   <option value="intermediate">Intermediate</option>
@@ -301,7 +304,7 @@ export default function CreateListingPage() {
                       }
                     })}
                     placeholder="Longitude"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    className={`w-full px-4 py-2 ${fieldClass}`}
                   />
                 </div>
                 <div>
@@ -317,7 +320,7 @@ export default function CreateListingPage() {
                       }
                     })}
                     placeholder="Latitude"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    className={`w-full px-4 py-2 ${fieldClass}`}
                   />
                 </div>
               </div>
@@ -333,7 +336,7 @@ export default function CreateListingPage() {
                     }
                   })}
                   placeholder="City"
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
+                  className={`px-4 py-2 ${fieldClass}`}
                 />
                 <input
                   type="text"
@@ -346,7 +349,7 @@ export default function CreateListingPage() {
                     }
                   })}
                   placeholder="State"
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
+                  className={`px-4 py-2 ${fieldClass}`}
                 />
                 <input
                   type="text"
@@ -359,7 +362,7 @@ export default function CreateListingPage() {
                     }
                   })}
                   placeholder="Country"
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
+                  className={`px-4 py-2 ${fieldClass}`}
                 />
               </div>
               <p className="text-xs text-gray-500 mt-1">
@@ -375,7 +378,7 @@ export default function CreateListingPage() {
               <select
                 value={formData.timeCommitment}
                 onChange={(e) => setFormData({ ...formData, timeCommitment: e.target.value as any })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                className={`w-full px-4 py-2 ${fieldClass}`}
               >
                 <option value="one-time">One-time</option>
                 <option value="short-term">Short-term</option>
@@ -398,7 +401,7 @@ export default function CreateListingPage() {
                     estimatedHours: { ...formData.estimatedHours, min: e.target.value }
                   })}
                   placeholder="Min hours"
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
+                  className={`px-4 py-2 ${fieldClass}`}
                 />
                 <input
                   type="number"
@@ -408,7 +411,7 @@ export default function CreateListingPage() {
                     estimatedHours: { ...formData.estimatedHours, max: e.target.value }
                   })}
                   placeholder="Max hours"
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
+                  className={`px-4 py-2 ${fieldClass}`}
                 />
               </div>
             </div>
