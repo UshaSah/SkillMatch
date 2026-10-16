@@ -4,9 +4,20 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { listingsApi } from '@/lib/api';
+import { messagesApi } from '@/lib/messages';
 import { useAuth } from '@/hooks/useAuth';
 import { AppNav } from '@/components/AppNav';
 import { Listing } from '@/types';
+
+function listingOwnerUserId(listing: Listing): string | null {
+  if (listing.owner?.userId) {
+    return listing.owner.userId;
+  }
+  const ownerId = listing.ownerId;
+  if (!ownerId) return null;
+  if (typeof ownerId === 'string') return ownerId;
+  return ownerId._id ?? null;
+}
 
 export default function ListingDetailPage() {
   const params = useParams();
@@ -17,6 +28,9 @@ export default function ListingDetailPage() {
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [messageDraft, setMessageDraft] = useState('');
+  const [messageSending, setMessageSending] = useState(false);
+  const [messageError, setMessageError] = useState('');
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -103,6 +117,39 @@ export default function ListingDetailPage() {
     populatedOwner?.email?.trim() ||
     'Community member';
 
+  const ownerUserId = listingOwnerUserId(listing);
+  const isOwnListing = Boolean(user && ownerUserId && user._id === ownerUserId);
+
+  const handleStartConversation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const content = messageDraft.trim();
+    if (!content || !ownerUserId || !listingId || messageSending) return;
+    try {
+      setMessageSending(true);
+      setMessageError('');
+      const { thread } = await messagesApi.createThread({
+        recipientId: ownerUserId,
+        listingId,
+        subject: listing.title
+          ? `About: ${listing.title}`
+          : 'About your listing',
+        content,
+      });
+      router.push(`/messages/${thread._id}`);
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } }).response?.status;
+      if (status === 404) {
+        setMessageError(
+          'This listing’s owner is not on SkillMatch (common with old seed data). Create a listing with your account and message it from a second login, or pick a listing from Create Listing / a real user.'
+        );
+      } else {
+        setMessageError('Could not start conversation. Please try again.');
+      }
+    } finally {
+      setMessageSending(false);
+    }
+  };
+
   const locationLine = [
     listing.location?.address?.city,
     listing.location?.address?.state,
@@ -179,6 +226,44 @@ export default function ListingDetailPage() {
               Listed {new Date(listing.createdAt).toLocaleDateString()}
             </p>
           </section>
+
+          {isOwnListing ? (
+            <p className="border-t pt-4 text-sm text-gray-500">
+              This is your listing. Others can message you from their view of this page.
+            </p>
+          ) : ownerUserId ? (
+            <section className="border-t pt-4">
+              <h2 className="text-sm font-semibold text-gray-900 mb-2">
+                Message about this listing
+              </h2>
+              <form onSubmit={handleStartConversation} className="space-y-2">
+                <textarea
+                  value={messageDraft}
+                  onChange={(e) => setMessageDraft(e.target.value)}
+                  rows={3}
+                  placeholder="Introduce yourself and what you are looking for…"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900"
+                  maxLength={2000}
+                />
+                {messageError && (
+                  <p className="text-sm text-red-600">{messageError}</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={messageSending || !messageDraft.trim()}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {messageSending ? 'Sending…' : 'Send message'}
+                </button>
+              </form>
+            </section>
+          ) : (
+            <p className="border-t pt-4 text-sm text-gray-500">
+              Messaging is not available for this listing (owner account missing). Try a
+              listing you created under another login, or create a new listing to test
+              messages.
+            </p>
+          )}
         </article>
       </main>
     </div>

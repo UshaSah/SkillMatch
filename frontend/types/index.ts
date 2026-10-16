@@ -81,6 +81,7 @@ export interface Listing {
   isRemote?: boolean;
   /** Present on GET /listings/:id when backend attaches owner profile */
   owner?: {
+    userId?: string;
     email?: string;
     profile?: {
       displayName?: string;

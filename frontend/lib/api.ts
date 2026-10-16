@@ -10,8 +10,6 @@ import {
   Listing,
   Profile,
   ProfileUpdateInput,
-  Thread,
-  Message,
 } from '@/types';
 
 function normalizeUser(raw: Record<string, unknown>): User {
@@ -207,7 +205,13 @@ api.interceptors.response.use(
 // Auth API
 export const authApi = {
   register: async (email: string, password: string): Promise<AuthResponse> => {
-    const response = await api.post('/auth/register', { email, password });
+    const localPart = email.split('@')[0]?.trim() || 'User';
+    const displayName = localPart.length >= 2 ? localPart : 'User';
+    const response = await api.post('/auth/register', {
+      email,
+      password,
+      displayName,
+    });
     // Backend returns { success: true, data: { user, profile, tokens: { accessToken, refreshToken } } }
     if (response.data.success && response.data.data) {
       return {
@@ -363,37 +367,6 @@ export const listingsApi = {
   },
 };
 
-// Messages API
-export const messagesApi = {
-  getThreads: async (): Promise<Thread[]> => {
-    const response = await api.get('/messages/threads');
-    return response.data;
-  },
-  getThread: async (threadId: string): Promise<Thread> => {
-    const response = await api.get(`/messages/threads/${threadId}`);
-    return response.data;
-  },
-  getMessages: async (threadId: string): Promise<Message[]> => {
-    const response = await api.get(`/messages/threads/${threadId}/messages`);
-    return response.data;
-  },
-  createThread: async (data: {
-    recipientUserId: string;
-    listingId?: string;
-    initialMessage: string;
-  }): Promise<Thread> => {
-    const response = await api.post('/messages/threads', data);
-    return response.data;
-  },
-  sendMessage: async (threadId: string, content: string): Promise<Message> => {
-    const response = await api.post(`/messages/threads/${threadId}/messages`, {
-      content,
-    });
-    return response.data;
-  },
-  markAsRead: async (threadId: string): Promise<void> => {
-    await api.put(`/messages/threads/${threadId}/read`);
-  },
-};
+export { messagesApi } from './messages';
 
 export default api;

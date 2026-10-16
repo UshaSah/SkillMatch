@@ -30,6 +30,12 @@ export function AppNav() {
             >
               My Profile
             </Link>
+            <Link
+              href="/messages"
+              className="text-gray-700 hover:text-blue-600 text-sm font-medium"
+            >
+              Messages
+            </Link>
           </div>
           <div className="flex items-center space-x-4">
             <span className="text-gray-700 text-sm hidden sm:inline">{user.email}</span>

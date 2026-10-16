@@ -35,8 +35,32 @@ export default function RegisterPage() {
       setError('');
       await registerUser(data.email, data.password);
       router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+    } catch (err: unknown) {
+      const axiosErr = err as {
+        response?: {
+          status?: number;
+          data?: {
+            message?: string;
+            error?: {
+              message?: string;
+              details?: { field: string; message: string }[];
+            };
+          };
+        };
+      };
+      const data = axiosErr.response?.data;
+      const details = data?.error?.details;
+      if (details?.length) {
+        setError(details.map((d) => d.message).join(' '));
+      } else if (axiosErr.response?.status === 429) {
+        setError('Too many attempts. Wait 15 minutes and try again.');
+      } else if (data?.error?.message) {
+        setError(data.error.message);
+      } else if (data?.message) {
+        setError(data.message);
+      } else {
+        setError('Registration failed');
+      }
     }
   };
 

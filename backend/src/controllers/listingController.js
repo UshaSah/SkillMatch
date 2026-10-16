@@ -1,5 +1,6 @@
 const Listing = require('../models/Listing');
 const Profile = require('../models/Profile');
+const User = require('../models/User');
 const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 
@@ -67,6 +68,10 @@ const getListing = async (req, res, next) => {
     }
 
     const ownerId = listing.ownerId;
+    let ownerUser = null;
+    if (ownerId) {
+      ownerUser = await User.findById(ownerId).select('email');
+    }
     await listing.populate('ownerId', 'email');
 
     // Profile is keyed by userId; owner user may be missing (e.g. seed/orphan listings)
@@ -81,10 +86,19 @@ const getListing = async (req, res, next) => {
       logger.error('Failed to increment view count', { error: err.message });
     });
 
-    // Add owner profile to response
+    // Add owner profile to response; owner.userId only when User exists (messaging)
     const listingObj = listing.toObject();
     const populatedOwner = listing.ownerId;
-    if (ownerProfile || populatedOwner) {
+    if (ownerId) {
+      listingObj.ownerId = ownerId.toString();
+    }
+    if (ownerUser) {
+      listingObj.owner = {
+        userId: ownerId.toString(),
+        email: ownerUser.email,
+        profile: ownerProfile ?? undefined
+      };
+    } else if (ownerProfile || populatedOwner) {
       listingObj.owner = {
         email: populatedOwner?.email ?? null,
         profile: ownerProfile ?? undefined
