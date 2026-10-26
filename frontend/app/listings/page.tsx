@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 export default function ListingsPage() {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, sessionError } = useAuth();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -22,10 +22,10 @@ export default function ListingsPage() {
   }>({});
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!authLoading && !user && !sessionError) {
       router.push('/login');
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, sessionError, router]);
 
   const fetchListings = useCallback(async () => {
     try {

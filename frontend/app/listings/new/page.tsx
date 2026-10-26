@@ -18,7 +18,7 @@ const fieldClass =
 
 export default function CreateListingPage() {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, sessionError } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
@@ -50,10 +50,10 @@ export default function CreateListingPage() {
   });
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!authLoading && !user && !sessionError) {
       router.push('/login');
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, sessionError, router]);
 
   const handleAddSkill = () => {
     if (newSkill.name.trim()) {

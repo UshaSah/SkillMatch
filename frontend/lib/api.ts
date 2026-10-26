@@ -10,6 +10,8 @@ import {
   Listing,
   Profile,
   ProfileUpdateInput,
+  PublicProfile,
+  ProfileSkill,
 } from '@/types';
 
 function normalizeUser(raw: Record<string, unknown>): User {
@@ -67,8 +69,14 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 export const ACCESS_TOKEN_KEY = 'accessToken';
 export const REFRESH_TOKEN_KEY = 'refreshToken';
 
+/** AuthProvider listens and clears React state + client navigates to login. */
+export const AUTH_SESSION_EXPIRED_EVENT = 'skillmatch:session-expired';
+
+let sessionExpiredNotified = false;
+
 export function setAuthTokens(accessToken: string, refreshToken?: string) {
   if (typeof window === 'undefined') return;
+  sessionExpiredNotified = false;
   localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
   if (refreshToken) {
     localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
@@ -79,6 +87,20 @@ export function clearAuthTokens() {
   if (typeof window === 'undefined') return;
   localStorage.removeItem(ACCESS_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
+}
+
+/** Axios HTTP status, or null when there was no response (network, CORS, timeout). */
+export function getHttpStatus(error: unknown): number | null {
+  if (error && typeof error === 'object' && 'response' in error) {
+    const status = (error as { response?: { status?: number } }).response?.status;
+    if (typeof status === 'number') return status;
+  }
+  return null;
+}
+
+/** Only wipe stored tokens when the server rejected auth (after refresh retry in interceptor). */
+export function shouldClearSessionOnError(error: unknown): boolean {
+  return getHttpStatus(error) === 401;
 }
 
 const api = axios.create({
@@ -103,19 +125,16 @@ function authRequestSkipsRefresh(url?: string): boolean {
   );
 }
 
-function redirectToLogin() {
+/**
+ * Invalid refresh / retry still 401: clear storage once and notify UI (no hard reload).
+ * Safe to call multiple times; parallel 401s only dispatch one event.
+ */
+export function notifySessionExpired(): void {
   if (typeof window === 'undefined') return;
-  if (
-    !window.location.pathname.includes('/login') &&
-    !window.location.pathname.includes('/register')
-  ) {
-    window.location.href = '/login';
-  }
-}
-
-function clearSessionAndRedirect() {
   clearAuthTokens();
-  redirectToLogin();
+  if (sessionExpiredNotified) return;
+  sessionExpiredNotified = true;
+  window.dispatchEvent(new CustomEvent(AUTH_SESSION_EXPIRED_EVENT));
 }
 
 let refreshInFlight: Promise<string> | null = null;
@@ -179,13 +198,13 @@ api.interceptors.response.use(
 
     if (authRequestSkipsRefresh(originalRequest.url) || originalRequest._retry) {
       if (!authRequestSkipsRefresh(originalRequest.url)) {
-        clearSessionAndRedirect();
+        notifySessionExpired();
       }
       return Promise.reject(error);
     }
 
     if (!localStorage.getItem(REFRESH_TOKEN_KEY)) {
-      clearSessionAndRedirect();
+      notifySessionExpired();
       return Promise.reject(error);
     }
 
@@ -196,7 +215,7 @@ api.interceptors.response.use(
       originalRequest.headers.Authorization = `Bearer ${accessToken}`;
       return api(originalRequest);
     } catch (refreshError) {
-      clearSessionAndRedirect();
+      notifySessionExpired();
       return Promise.reject(refreshError);
     }
   }
@@ -277,6 +296,33 @@ export const userApi = {
     }
     return profile;
   },
+  getPublicProfile: async (userId: string): Promise<PublicProfile> => {
+    const response = await api.get(`/users/${userId}/profile`);
+    const raw = response.data.data?.profile ?? response.data.profile;
+    if (!response.data.success || !raw) {
+      throw new Error('Profile not found');
+    }
+    const profile = raw as Record<string, unknown>;
+    const skills = Array.isArray(profile.skills) ? profile.skills : [];
+    return {
+      userId: String(profile.userId ?? userId),
+      displayName: String(profile.displayName ?? 'Member'),
+      bio: profile.bio != null ? String(profile.bio) : undefined,
+      skills: skills.map((s) => {
+        const skill = s as Record<string, unknown>;
+        return {
+          name: String(skill.name ?? ''),
+          level: skill.level as ProfileSkill['level'],
+          category: String(skill.category ?? 'General'),
+        };
+      }),
+      avatarUrl: profile.avatarUrl != null ? String(profile.avatarUrl) : null,
+      reputation: profile.reputation != null ? Number(profile.reputation) : undefined,
+      rating: profile.rating as PublicProfile['rating'],
+      location: profile.location as PublicProfile['location'],
+      memberSince: profile.memberSince ? String(profile.memberSince) : undefined,
+    };
+  },
 };
 
 // Listings API
@@ -289,6 +335,7 @@ export const listingsApi = {
     isRemote?: boolean;
     timeCommitment?: string;
     status?: string;
+    ownerId?: string;
     page?: number;
     limit?: number;
     sortBy?: 'newest' | 'oldest' | 'distance' | 'popularity';

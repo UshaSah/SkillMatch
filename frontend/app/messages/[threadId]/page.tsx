@@ -28,7 +28,7 @@ export default function MessageThreadPage() {
       ? params.threadId
       : params.threadId?.[0];
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, sessionError } = useAuth();
 
   const [thread, setThread] = useState<MessageThread | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -38,10 +38,10 @@ export default function MessageThreadPage() {
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!authLoading && !user && !sessionError) {
       router.push('/login');
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, sessionError, router]);
 
   const loadThread = useCallback(async () => {
     if (!threadId) {

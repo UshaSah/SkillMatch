@@ -20,7 +20,7 @@ const fieldClass =
   'bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500';
 
 export default function ProfilePage() {
-  const { user, loading: authLoading, refreshSession } = useAuth();
+  const { user, loading: authLoading, sessionError, refreshSession } = useAuth();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -38,10 +38,10 @@ export default function ProfilePage() {
   const [country, setCountry] = useState('USA');
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!authLoading && !user && !sessionError) {
       router.push('/login');
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, sessionError, router]);
 
   useEffect(() => {
     if (!user) return;

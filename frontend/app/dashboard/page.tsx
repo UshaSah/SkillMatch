@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { AppNav } from '@/components/AppNav';
 
 function DashboardContent() {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, sessionError } = useAuth();
 
   const greetingName =
     profile?.displayName?.trim() ||
@@ -18,10 +18,10 @@ function DashboardContent() {
   const profileSaved = searchParams.get('profileSaved') === '1';
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && !sessionError) {
       router.push('/login');
     }
-  }, [user, loading, router]);
+  }, [user, loading, sessionError, router]);
 
   const dismissProfileSavedBanner = () => {
     router.replace('/dashboard');

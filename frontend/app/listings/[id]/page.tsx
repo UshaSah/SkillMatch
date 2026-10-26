@@ -23,7 +23,7 @@ export default function ListingDetailPage() {
   const params = useParams();
   const listingId = typeof params.id === 'string' ? params.id : params.id?.[0];
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, sessionError } = useAuth();
 
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,10 +33,10 @@ export default function ListingDetailPage() {
   const [messageError, setMessageError] = useState('');
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!authLoading && !user && !sessionError) {
       router.push('/login');
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, sessionError, router]);
 
   const fetchListing = useCallback(async () => {
     if (!listingId) {
@@ -221,7 +221,24 @@ export default function ListingDetailPage() {
 
           <section className="border-t pt-4">
             <h2 className="text-sm font-semibold text-gray-900 mb-1">Posted by</h2>
-            <p className="text-gray-800">{ownerName}</p>
+            {ownerUserId && !isOwnListing ? (
+              <Link
+                href={`/users/${ownerUserId}`}
+                className="text-blue-600 hover:underline font-medium"
+              >
+                {ownerName}
+              </Link>
+            ) : (
+              <p className="text-gray-800">{ownerName}</p>
+            )}
+            {ownerUserId && !isOwnListing && (
+              <Link
+                href={`/users/${ownerUserId}`}
+                className="text-xs text-blue-600 hover:underline mt-1 inline-block"
+              >
+                View profile →
+              </Link>
+            )}
             <p className="text-xs text-gray-500 mt-2">
               Listed {new Date(listing.createdAt).toLocaleDateString()}
             </p>
